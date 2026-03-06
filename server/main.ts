@@ -21,7 +21,15 @@ Deno.serve(async (req: Request) => {
     const headers = {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*", // En prod, on mettrait l'URL précise du client
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS", // On liste les méthodes
+        "Access-Control-Allow-Headers": "Content-Type", // On autorise le JSON
     };
+
+    // GESTION DU PREFLIGHT
+    // Si c'est une requête OPTIONS, on répond directement pour le CORS
+    if (req.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers });
+    }
 
     // Endpoint pour ajouter un flamant rose
     if (url.pathname === "/api/flamingos" && req.method === "POST") {
